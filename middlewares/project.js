@@ -2,9 +2,10 @@ const fs = require("fs");
 
 const projectByName = (nameProject) => {
   const dataProjects = loadProjects();
-  const { data } = dataProjects;
   // search proyect by Name ...
-  const searchProject = data.filter((el) => el.proyecto === nameProject);
+  const searchProject = dataProjects.filter(
+    (el) => el.proyecto === nameProject
+  );
   return searchProject;
 };
 
