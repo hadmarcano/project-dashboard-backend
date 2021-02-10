@@ -1,8 +1,8 @@
 // Generic import ...
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 require("dotenv").config();
-const db = require("./db/mongoose");
 
 // import Routes ...
 
@@ -12,14 +12,11 @@ const projectRoutes = require("./routes/project");
 
 const app = express();
 
-// Excute DB connection ...
-
-//db();
-
 // Middlewares ...
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors());
 
 // Routes Middlewares ...
 
