@@ -23,6 +23,7 @@ app.use(cors());
 app.use("/api", projectRoutes);
 
 // Port ...
+// preparing to deploy
 
 const port = process.env.PORT || 8000;
 
