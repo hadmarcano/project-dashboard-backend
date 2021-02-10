@@ -2,6 +2,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 //require("dotenv").config();
 
 // import middlewares ...
@@ -20,11 +22,13 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cors());
 
 // Routes Middlewares ...
 
-app.get("/api", (req, res) => {
+app.get("/api/allprojects", (req, res) => {
   try {
     const projects = loadProjects();
     res.json(projects);
@@ -33,10 +37,10 @@ app.get("/api", (req, res) => {
   }
 });
 
-app.get("/api/projects-by-name", (req, res) => {
+// get - /api/projects?proyecto=name
+app.get("/api/projects", (req, res) => {
   try {
-    const projectName = req.body.proyecto;
-    console.log(projectName);
+    const projectName = req.query.proyecto;
     const infoProject = projectByName(projectName);
     res.status(200).json(infoProject);
   } catch (error) {
@@ -44,8 +48,10 @@ app.get("/api/projects-by-name", (req, res) => {
   }
 });
 
-app.get("/api/project-by-name", (req, res) => {
-  const requests = Object.keys(req.body);
+// get - //api/projects-by-date?proyecto=name&date=2020-01-01
+app.get("/api/projects-by-date", (req, res) => {
+  const requests = Object.keys(req.query);
+
   const allowedRequest = ["proyecto", "date"];
   const isValidOperation = requests.every((request) =>
     allowedRequest.includes(request)
@@ -55,11 +61,11 @@ app.get("/api/project-by-name", (req, res) => {
     return res.status(400).json({ Error: "invalid request" });
   }
 
-  const projectName = req.body.proyecto;
-  const date = req.body.date;
+  const projectName = req.query.proyecto;
+  const date = req.query.date;
 
-  console.log(projectName);
-  console.log(date);
+  // console.log(projectName);
+  // console.log(date);
 
   if (
     projectName !== "" &&
@@ -73,7 +79,7 @@ app.get("/api/project-by-name", (req, res) => {
         ? "Project not found"
         : projectsByDate(projects, date);
 
-    res.json(response);
+    return res.status(200).json(response);
   }
 
   if (
@@ -81,10 +87,9 @@ app.get("/api/project-by-name", (req, res) => {
     (projectName == undefined && date !== undefined && date !== "")
   ) {
     const projects = loadProjects();
-    const { data } = projects;
 
-    const response = projectsByDate(data, date);
-    res.status(200).json(response);
+    const response = projectsByDate(projects, date);
+    return res.status(200).json(response);
   }
 
   if (
@@ -95,7 +100,7 @@ app.get("/api/project-by-name", (req, res) => {
     if (response.length !== 0) {
       return res.status(200).json(response);
     }
-    res.status(404).json({ message: "Project not found" });
+    return res.status(404).json({ message: "Project not found" });
   }
 });
 
