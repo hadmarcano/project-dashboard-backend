@@ -12,7 +12,8 @@ const loadProjects = () => {
   try {
     const dataBuffer = fs.readFileSync("../bbdd.json");
     const dataJSON = dataBuffer.toString();
-    return JSON.parse(dataJSON);
+    const { data } = JSON.parse(dataJSON);
+    return data;
   } catch (error) {
     return [];
   }
