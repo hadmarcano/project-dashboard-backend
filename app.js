@@ -12,6 +12,7 @@ const {
   loadProjects,
   projectByName,
   projectsByDate,
+  dateProjects,
 } = require("./middlewares/project");
 
 // App-Express ...
@@ -27,6 +28,15 @@ app.use(cookieParser());
 app.use(cors());
 
 // Routes Middlewares ...
+
+app.get("/api/actives-date", async (req, res) => {
+  try {
+    const response = dateProjects();
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.get("/api/allprojects", (req, res) => {
   try {

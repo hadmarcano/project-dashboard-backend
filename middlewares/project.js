@@ -32,8 +32,24 @@ const projectsByDate = (data, date) => {
   return infoProjects;
 };
 
+const dateProjects = () => {
+  let activeDates = [];
+  const dataProjects = loadProjects();
+
+  dataProjects.forEach((element) => {
+    const date = element.timestamp.split(" ")[0];
+    const exists = activeDates.includes(date);
+    if (!exists) {
+      activeDates.push(date);
+    }
+  });
+
+  return activeDates.sort();
+};
+
 module.exports = {
   projectByName,
   loadProjects,
   projectsByDate,
+  dateProjects,
 };
